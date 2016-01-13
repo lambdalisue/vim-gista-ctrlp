@@ -1,6 +1,8 @@
 vim-gista-ctrlp
 ===============================================================================
 
+![Screenshot](img/screenshot.png)
+
 *vim-gista-ctrlp* is a harmonic plugin of [vim-gista](https://github.com/lambdalisue/vim-gista) which allow users to use [ctrpl.vim](https://github.com/ctrlpvim/ctrlp.vim) interface to list gists.
 
 Install
