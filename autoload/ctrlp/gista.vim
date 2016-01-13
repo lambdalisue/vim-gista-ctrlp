@@ -71,7 +71,13 @@ function! s:parse_ctrlp_args(args) abort
 endfunction
 
 function! ctrlp#gista#init() abort
-  let index = gista#command#list#call(s:gista_options)
+  let session = gista#client#session(s:gista_options)
+  try
+    call session.enter()
+    let index = gista#command#list#call(s:gista_options)
+  finally
+    call session.exit()
+  endtry
   let candidates = map(copy(index.entries), 's:format_entry(v:val)')
   let candidates = s:L.flatten(candidates, 1)
   let longest = 0
