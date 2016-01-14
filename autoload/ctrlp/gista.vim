@@ -73,8 +73,11 @@ endfunction
 function! ctrlp#gista#init() abort
   let session = gista#client#session(s:gista_options)
   try
-    call session.enter()
-    let index = gista#command#list#call(s:gista_options)
+    if session.enter()
+      let index = gista#command#list#call(s:gista_options)
+    else
+      return []
+    endif
   finally
     call session.exit()
   endtry
