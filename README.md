@@ -26,7 +26,7 @@ NeoBundle 'lambdalisue/vim-gista-ctrlp', {
 " neobundle.vim (Lazy)
 NeoBundle 'lambdalisue/vim-gista-ctrlp', {
     \ 'depends': [
-    \   'lambdalisue/vim-gista'
+    \   'lambdalisue/vim-gista',
     \   'ctrlpvim/ctrlp.vim'
     \ ],
     \ 'on_cmd': 'CtrlPGista',
