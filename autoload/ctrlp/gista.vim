@@ -8,6 +8,7 @@ set cpo&vim
 let s:V = gista#vital()
 let s:L = s:V.import('Data.List')
 let s:S = s:V.import('Data.String')
+let s:CACHE_FORCED   = 2
 
 let s:opener = {
       \ 'e': 'edit',
@@ -34,7 +35,6 @@ function! s:truncate(str, width) abort
   return s:S.truncate(a:str, a:width - 4) . suffix
 endfunction
 function! s:format_entry(entry) abort
-  let gistid = a:entry.id
   let description = empty(a:entry.description)
         \ ? join(keys(a:entry.files), ', ')
         \ : a:entry.description
@@ -42,8 +42,10 @@ function! s:format_entry(entry) abort
   let candidates = []
   for filename in keys(a:entry.files)
     let bufname = gista#command#open#bufname({
-          \ 'gistid': gistid,
+          \ 'gistid': a:entry.id,
           \ 'filename': filename,
+          \ 'cache': s:CACHE_FORCED,
+          \ 'verbose': 0,
           \})
     call add(candidates, [bufname, description])
   endfor
@@ -74,7 +76,7 @@ function! ctrlp#gista#init() abort
   let session = gista#client#session(s:gista_options)
   try
     if session.enter()
-      let index = gista#command#list#call(s:gista_options)
+      let [index, lookup] = gista#command#list#call(s:gista_options)
     else
       return []
     endif
