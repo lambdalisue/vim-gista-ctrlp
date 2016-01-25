@@ -2,12 +2,10 @@ if exists('s:loaded_ctrlp_gista')
   finish
 endif
 let s:loaded_ctrlp_gista = 1
-let s:save_cpo = &cpo
-set cpo&vim
 
 let s:V = gista#vital()
-let s:L = s:V.import('Data.List')
-let s:S = s:V.import('Data.String')
+let s:List = s:V.import('Data.List')
+let s:String = s:V.import('Data.String')
 let s:CACHE_FORCED   = 2
 
 let s:opener = {
@@ -32,7 +30,7 @@ let g:ctrlp_ext_vars = add(get(g:, 'ctrlp_ext_vars', []), s:gista_var)
 
 function! s:truncate(str, width) abort
   let suffix = strdisplaywidth(a:str) > a:width ? '...' : '   '
-  return s:S.truncate(a:str, a:width - 4) . suffix
+  return s:String.truncate(a:str, a:width - 4) . suffix
 endfunction
 function! s:format_entry(entry) abort
   let description = empty(a:entry.description)
@@ -76,15 +74,15 @@ function! ctrlp#gista#init() abort
   let session = gista#client#session(s:gista_options)
   try
     if session.enter()
-      let [index, lookup] = gista#command#list#call(s:gista_options)
+      let result = gista#command#list#call(s:gista_options)
     else
       return []
     endif
   finally
     call session.exit()
   endtry
-  let candidates = map(copy(index.entries), 's:format_entry(v:val)')
-  let candidates = s:L.flatten(candidates, 1)
+  let candidates = map(copy(result.index.entries), 's:format_entry(v:val)')
+  let candidates = s:List.flatten(candidates, 1)
   let longest = 0
   for [bufname, description] in candidates
     if strlen(bufname) > longest
@@ -115,6 +113,3 @@ function! ctrlp#gista#cmd(...) abort
   let s:gista_options = s:parse_ctrlp_args(get(a:000, 0, ''))
   return s:id
 endfunction
-
-let &cpo = s:save_cpo
-unlet s:save_cpo
